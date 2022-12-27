@@ -6,6 +6,7 @@ const refs = {
 };
 
 const photosMarkup = createPhotoMarkup(galleryItems);
+let instance;
 
 refs.galeryListElem.insertAdjacentHTML('beforeend', photosMarkup);
 refs.galeryListElem.addEventListener('click', onPhotosContainerClick);
@@ -39,12 +40,15 @@ function onPhotosContainerClick(event) {
 }
 
 function openModal(photoSrc) {
-  const instance = basicLightbox.create(`
+  instance = basicLightbox.create(`
     <img src="${photoSrc}" width="800" height="600">
 `);
 
   instance.show();
-  document.body.addEventListener('keydown', e => {
-    if (e.key === 'Escape') instance.close();
-  });
+  document.addEventListener('keydown', closeModal);
+}
+
+function closeModal(event) {
+  if (event.key === 'Escape') instance.close();
+  document.removeEventListener('keydown', closeModal);
 }
